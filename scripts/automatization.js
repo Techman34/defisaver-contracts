@@ -81,18 +81,32 @@ function getAbiFunction(contract, functionName) {
 (async () => {
     await initContracts();
 
-    const cdps = await getCDPsForAddress(proxyAddr);
-    const res = await getCdpInfo(cdps[1]);
-    console.log(res);
+    // const chid = await web3.eth.net.chainId();
+    const neid = await web3.eth.net.getId();
 
-    await boost(cdps[1].cdpId, '100', 'ETH');
+    web3.currentProvider.sendAsync({
+      jsonrpc: "2.0",
+      method: "eth_chainId",
+      id: new Date().getTime() // Id of the request; anything works, really
+    }, function(err, res) {
+      console.log('chainId', res, err);
+    });
 
-    const res1 = await getCdpInfo(cdps[1]);
-    console.log(res1);
+    console.log(neid);
+
+    // const cdps = await getCDPsForAddress(proxyAddr);
+
+    // console.log(cdps);
+    // const res = await getCdpInfo(cdps[1]);
+    // console.log(res);
+
+    // await boost(cdps[1].cdpId, '100', 'ETH');
+
+    // const res1 = await getCdpInfo(cdps[1]);
+    // console.log(res1);
 })();
 
 const getCDPsForAddress = async (proxyAddr) => {
-
     const cdps = await getCdps.methods.getCdpsAsc(cdpManagerAddr, proxyAddr).call();
 
     let usersCdps = [];
